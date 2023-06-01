@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -32,7 +33,6 @@ class _InfiniteScrollScreenState extends State<InfiniteScrollScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     scrollController.dispose();
     isMounted = false;
     super.dispose();
@@ -44,7 +44,7 @@ class _InfiniteScrollScreenState extends State<InfiniteScrollScreen> {
     isLoading = true;
     setState(() {});
 
-    Future.delayed(const Duration(seconds: 2));
+   await Future.delayed(const Duration(seconds: 2));
 
     addFiveImages();
     isLoading = false;
@@ -84,8 +84,11 @@ class _InfiniteScrollScreenState extends State<InfiniteScrollScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.pop(),
-        child: const Icon(Icons.arrow_back_ios_new_outlined),
+        onPressed: () => isLoading ? {} : context.pop(),
+        child: isLoading
+            ? SpinPerfect(
+                infinite: true, child: const Icon(Icons.refresh_rounded))
+            : const Icon(Icons.arrow_back_ios_new_outlined),
       ),
     );
   }
