@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -20,10 +21,40 @@ final slides = <SlideInfo>[
       "assets/images/3.png"),
 ];
 
-class AppTutorialScreen extends StatelessWidget {
+class AppTutorialScreen extends StatefulWidget {
   static const name = "tutorial_screen";
 
   const AppTutorialScreen({super.key});
+
+  @override
+  State<AppTutorialScreen> createState() => _AppTutorialScreenState();
+}
+
+class _AppTutorialScreenState extends State<AppTutorialScreen> {
+  final PageController pageViewContrller = PageController();
+  bool endReached = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    pageViewContrller.addListener(() {
+      final page = pageViewContrller.page ?? 0;
+      if (!endReached && page >= (slides.length - 1.5)) {
+        setState(() {
+          endReached = true;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    pageViewContrller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +63,7 @@ class AppTutorialScreen extends StatelessWidget {
       body: Stack(
         children: [
           PageView(
+              controller: pageViewContrller,
               physics: const BouncingScrollPhysics(),
               children: slides
                   .map((slideData) => _Slide(
@@ -47,7 +79,19 @@ class AppTutorialScreen extends StatelessWidget {
                 onPressed: () {
                   context.pop();
                 },
-              ))
+              )),
+          endReached
+              ? Positioned(
+                  bottom: 30,
+                  right: 30,
+                  child: FadeInRight(
+                    from: 15,
+                    delay: const Duration(milliseconds: 500),
+                    child: FilledButton(
+                        child: const Text("Continuar"),
+                        onPressed: () => context.pop()),
+                  ))
+              : const SizedBox(),
         ],
       ),
     );
