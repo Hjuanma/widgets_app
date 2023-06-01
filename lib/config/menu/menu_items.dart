@@ -44,4 +44,9 @@ const appMenuItems = <MenuItem>[
       subTitle: "Flutter controls",
       link: "/ui-controls",
       icon: Icons.car_crash_outlined),
+  MenuItem(
+      title: "Tutorial",
+      subTitle: "App tutorial",
+      link: "/tutorial",
+      icon: Icons.accessibility_new_outlined),
 ];
