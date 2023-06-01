@@ -44,7 +44,7 @@ class _InfiniteScrollScreenState extends State<InfiniteScrollScreen> {
     isLoading = true;
     setState(() {});
 
-   await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
 
     addFiveImages();
     isLoading = false;
@@ -61,6 +61,20 @@ class _InfiniteScrollScreenState extends State<InfiniteScrollScreen> {
     imagesIds.addAll([1, 2, 3, 4, 5].map((e) => e + lastId));
   }
 
+  Future onRefresh() async {
+    isLoading = true;
+    setState(() {});
+    await Future.delayed(const Duration(seconds: 3));
+    if (!isMounted) return;
+    final lastId = imagesIds.last;
+    imagesIds.clear();
+    imagesIds.add(lastId + 1);
+    addFiveImages();
+
+    isLoading = false;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,18 +83,24 @@ class _InfiniteScrollScreenState extends State<InfiniteScrollScreen> {
         context: context,
         removeBottom: true,
         removeTop: true,
-        child: ListView.builder(
-          controller: scrollController,
-          itemCount: imagesIds.length,
-          itemBuilder: (context, index) {
-            return FadeInImage(
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: 300,
-                placeholder: const AssetImage("assets/images/jar-loading.gif"),
-                image: NetworkImage(
-                    "https://picsum.photos/id/${imagesIds[index]}/500/300"));
-          },
+        child: RefreshIndicator(
+          edgeOffset: 10,
+          strokeWidth: 2,
+          onRefresh: onRefresh,
+          child: ListView.builder(
+            controller: scrollController,
+            itemCount: imagesIds.length,
+            itemBuilder: (context, index) {
+              return FadeInImage(
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: 300,
+                  placeholder:
+                      const AssetImage("assets/images/jar-loading.gif"),
+                  image: NetworkImage(
+                      "https://picsum.photos/id/${imagesIds[index]}/500/300"));
+            },
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
