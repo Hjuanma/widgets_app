@@ -11,7 +11,7 @@ class UiControlsScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("UI Controls"),
       ),
-      body: _UiControlsView(),
+      body: const _UiControlsView(),
     );
   }
 }
@@ -46,7 +46,7 @@ class _UiControlsViewState extends State<_UiControlsView> {
                 })),
         ExpansionTile(
           title: const Text("Vehicle"),
-          subtitle: Text("${selectedTransport.name}"),
+          subtitle: Text(selectedTransport.name),
           children: [
             RadioListTile(
                 title: const Text("By Car"),
